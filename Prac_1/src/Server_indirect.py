@@ -1,38 +1,43 @@
 import pika
-import sys
 import json
+from Worker import TicketWorker
 
-def run_indirect_producer(file_path):
-    # Conexión a RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-    channel = connection.channel()
-    channel.queue_declare(queue='ticket_requests', durable=True)
+worker_core = TicketWorker(host='localhost')
 
-    print(f"Enviando benchmark a RabbitMQ: {file_path}")
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
 
-    with open(file_path, 'r') as f:
-        for line in f:
-            parts = line.split()
-            if not parts or parts[0] != "BUY": continue
-            
-            # Creamos un diccionario con la tarea
-            task = {
-                "type": "unnumbered" if len(parts) == 3 else "numbered",
-                "client_id": parts[1],
-                "request_id": parts[-1],
-                "seat_id": parts[2] if len(parts) == 4 else None
-            }
+# Declaramos las colas de tareas y control
+channel.queue_declare(queue='ticket_requests', durable=True)
+channel.queue_declare(queue='control_queue', durable=True)
 
-            # Publicamos en la cola
-            channel.basic_publish(
-                exchange='',
-                routing_key='ticket_requests',
-                body=json.dumps(task),
-                properties=pika.BasicProperties(delivery_mode=2) # Mensaje persistente
-            )
+def task_callback(ch, method, properties, body):
+    task = json.loads(body)
+    if task["type"] == "unnumbered":
+        result = worker_core.buy_unnumbered(task["client_id"], task["request_id"])
+    else:
+        result = worker_core.buy_numbered(task["client_id"], task["seat_id"], task["request_id"])
+    
+    worker_core.r.rpush("benchmark_results", json.dumps(result))
+    print(f" [v] Procesado: {result['status']} para {task['client_id']}")
+    ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    print("Todas las peticiones han sido encoladas.")
-    connection.close()
+def control_callback(ch, method, properties, body):
+    command = body.decode()
+    if command == "RESET":
+        print("\n[!] RECIBIDO COMANDO DE REINICIO [!]")
+        worker_core.reset_system()
+        # Opcional: También podrías limpiar la cola de resultados si quieres
+        worker_core.r.delete("benchmark_results")
+        print(" -> Sistema limpio y listo para el siguiente benchmark.\n")
+    
+    ch.basic_ack(delivery_tag=method.delivery_tag)
 
-if __name__ == "__main__":
-    run_indirect_producer(sys.argv[1])
+# Configuramos ambos consumidores en el mismo script
+channel.basic_qos(prefetch_count=1)
+
+channel.basic_consume(queue='ticket_requests', on_message_callback=task_callback)
+channel.basic_consume(queue='control_queue', on_message_callback=control_callback)
+
+print(" [*] Worker escuchando TAREAS y CONTROL. Ctrl+C para salir.")
+channel.start_consuming()
