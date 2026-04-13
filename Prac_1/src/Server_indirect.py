@@ -11,7 +11,7 @@ channel = connection.channel()
 channel.queue_declare(queue='ticket_requests', durable=True)
 channel.queue_declare(queue='control_queue', durable=True)
 
-def task_callback(ch, method, properties, body):
+def task_callback(ch, method, body):
     task = json.loads(body)
     if task["type"] == "unnumbered":
         result = worker_core.buy_unnumbered(task["client_id"], task["request_id"])
@@ -22,7 +22,7 @@ def task_callback(ch, method, properties, body):
     print(f" [v] Procesado: {result['status']} para {task['client_id']}")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-def control_callback(ch, method, properties, body):
+def control_callback(ch, method, body):
     command = body.decode()
     if command == "RESET":
         print("\n[!] RECIBIDO COMANDO DE REINICIO [!]")

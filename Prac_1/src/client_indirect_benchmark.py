@@ -17,13 +17,13 @@ def send_reset_signal():
     )
     connection.close()
 
-def run_indirect_benchmark(file_path):
+def run_indirect_benchmark(file_path, ip_servidor):
     # 1. Conexión a Redis para limpiar y monitorear resultados
-    r_db = redis.Redis(host='localhost', port=6379, decode_responses=True)
+    r_db = redis.Redis(host=ip_servidor, port=6379, decode_responses=True)
     r_db.delete("benchmark_results") # Limpiar pruebas anteriores
 
     # 2. Conexión a RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(ip_servidor))
     channel = connection.channel()
     channel.queue_declare(queue='ticket_requests', durable=True)
 
@@ -84,8 +84,8 @@ def run_indirect_benchmark(file_path):
     connection.close()
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Uso: python client_benchmark_indirect.py <ruta_del_archivo.txt>")
+    if len(sys.argv) != 3:
+        print("Uso: python client_benchmark_indirect.py <ruta_del_archivo.txt> <ip_del_servidor>")
     else:
-        run_indirect_benchmark(sys.argv[1])
+        run_indirect_benchmark(sys.argv[1], sys.argv[2])
         send_reset_signal()

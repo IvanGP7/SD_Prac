@@ -5,8 +5,6 @@ Modelo Numerado: Diseña una estructura en Redis (puedes usar un Hash o Strings 
 
 Modelo No Numerado: Usa un contador atómico en Redis (INCR) que se detenga al llegar a 20,000.
 
-Scripts Lua: (Opcional pero recomendado) Escribe pequeños scripts en Redis para que la comprobación de "asiento libre" y la "compra" sean una sola operación atómica.
-
 Fase 2: Arquitectura de Comunicación Directa (REST/RPC)
 Desarrollo del Servidor: Crea un servicio (en Python con Flask para REST o Pyro4) que reciba la petición de compra y consulte a Redis.
 

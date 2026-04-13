@@ -20,11 +20,11 @@ class TicketServer(object):
         self.worker.reset_system()
         return "OK"
 
-def main(nombre_nodo):
+def main(nombre_nodo, ip_servidor):
     # Configuración del Daemon para aceptar conexiones externas (importante para AWS)
     # Reemplaza '0.0.0.0' por la IP privada de la VM si es necesario
-    daemon = Pyro4.Daemon(host="127.0.0.1")
-    ns = Pyro4.locateNS()
+    daemon = Pyro4.Daemon(host=ip_servidor)
+    ns = Pyro4.locateNS(host=ip_servidor)
 
     uri = daemon.register(TicketServer)
     ns.register(nombre_nodo, uri)
@@ -33,7 +33,7 @@ def main(nombre_nodo):
     daemon.requestLoop()
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Uso: python Server_direct.py <nombre_del_nodo>")
+    if len(sys.argv) != 3:
+        print("Uso: python Server_direct.py <nombre_del_nodo> <ip_del_servidor>")
     else:
-        main(f"concert.tickets.{sys.argv[1]}")
+        main(f"concert.tickets.{sys.argv[1]}", sys.argv[2])

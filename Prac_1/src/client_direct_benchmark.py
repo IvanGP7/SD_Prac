@@ -2,10 +2,10 @@ import Pyro4
 import time
 import sys
 
-def run_balanced_benchmark(file_path):
+def run_balanced_benchmark(file_path, ip_servidor):
     # 1. Localizar el Name Server
     try:
-        ns = Pyro4.locateNS()
+        ns = Pyro4.locateNS(host=ip_servidor)
         # Buscamos todos los objetos registrados que empiecen por "concert.tickets"
         all_objects = ns.list(prefix="concert.tickets.")
         
@@ -71,7 +71,7 @@ def run_balanced_benchmark(file_path):
     server.reset()  # Reiniciamos el sistema para la próxima ejecución
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Uso: python client_benchmark_balanced.py <ruta_del_archivo.txt>")
+    if len(sys.argv) != 3:
+        print("Uso: python client_benchmark_balanced.py <ruta_del_archivo.txt> <ip_del_servidor>")
     else:
-        run_balanced_benchmark(sys.argv[1])
+        run_balanced_benchmark(sys.argv[1], sys.argv[2])
