@@ -4,8 +4,8 @@ import time
 import sys
 import redis
 
-def send_reset_signal():
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+def send_reset_signal(ip_servidor):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(ip_servidor))
     channel = connection.channel()
     channel.queue_declare(queue='control_queue', durable=True)
     
@@ -88,4 +88,4 @@ if __name__ == "__main__":
         print("Uso: python client_benchmark_indirect.py <ruta_del_archivo.txt> <ip_del_servidor>")
     else:
         run_indirect_benchmark(sys.argv[1], sys.argv[2])
-        send_reset_signal()
+        send_reset_signal(sys.argv[2])
