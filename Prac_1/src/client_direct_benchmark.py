@@ -16,7 +16,7 @@ def run_balanced_benchmark(file_path, ip_servidor):
         # Creamos una lista de proxies (conexiones) a cada nodo encontrado
         proxies = []
         for name in all_objects.keys():
-            proxies.append(Pyro4.Proxy(f"PYRONAME:{name}"))
+            proxies.append(Pyro4.Proxy(f"PYRONAME:{name}@{ip_servidor}"))
             #print(f"Conectado al nodo: {name}")
 
     except Exception as e:
