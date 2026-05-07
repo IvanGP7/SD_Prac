@@ -13,7 +13,7 @@ def analizar():
     data_directo = {}
     data_indirecto = {}
 
-    print(f"📂 Procesando datos de: {os.path.abspath(carpeta)}")
+    print(f"Procesando datos de: {os.path.abspath(carpeta)}")
 
     for archivo in os.listdir(carpeta):
         if not archivo.endswith(".txt"): continue
@@ -79,7 +79,7 @@ def analizar():
     
     plt.tight_layout()
     plt.savefig('grafico_escalabilidad_final.png')
-    print(f"✅ ¡Éxito! Gráfico guardado como 'grafico_escalabilidad_final.png'")
+    print(f"[+] Gráfico guardado como 'grafico_escalabilidad_final.png'")
     plt.show()
 
 if __name__ == "__main__":
