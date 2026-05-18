@@ -1,7 +1,7 @@
 # SD_Prac
 ## Guía de Ejecución Distribuida (Dos Máquinas)
 
-Esta sección describe cómo ejecutar los benchmarks utilizando dos máquinas físicas (p. ej., Torre como Servidor y Portátil como Cliente) para validar la escalabilidad y el comportamiento del sistema en red.
+Esta sección describe cómo ejecutar los benchmarks utilizando dos máquinas físicas en red local (p. ej., Torre como Servidor y Portátil como Cliente) para validar la escalabilidad horizontal y el comportamiento del sistema.
 
 ### Requisitos Previos
 1. **Identificar la IP del Servidor:** En la máquina Servidor (Torre), abre una terminal y ejecuta `ipconfig`. Busca la dirección IPv4 (ej. `192.168.1.50`).
@@ -24,30 +24,36 @@ python -m Pyro4.naming -n [IP_SERVIDOR]
 2. Lanzar Nodos de Arquitectura Directa (Pyro4)
 Lanza tantos nodos como desees para probar el balanceo:
 
-Bash
-python server_direct.py [IP_SERVIDOR] concert.tickets.nodo1
-python server_direct.py [IP_SERVIDOR] concert.tickets.nodo2
+```Bash
+python .\Prac_1\src\Server_direct.py [IP_SERVIDOR] nodo1
+python .\Prac_1\src\Server_direct.py [IP_SERVIDOR] nodo2
+```
+
 3. Lanzar Workers de Arquitectura Indirecta (RabbitMQ)
-Bash
-python server_indirect.py
+```Bash
+python .\Prac_1\src\Server_indirect.py
+```
+
 ### Fase 2: Ejecución del Benchmark (Máquina B - Portátil)
 Desde la máquina cliente, lanza las pruebas apuntando a la IP de la torre:
 
-1. Limpiar Sistema (Opcional)
+Comentario: Para recolectar los datos que alimentarán las gráficas, se recomienda redirigir la salida estándar de la consola a un archivo .txt dentro de la carpeta Resultados utilizando el operador >> de PowerShell.
+
+1. Benchmark Arquitectura Directa (Balanceado)
 ```Bash
-python limpiar.py [IP_SERVIDOR]
+python .\Prac_1\src\client_direct_benchmark.py .\Prac_1\Benchmarks\benchmark_unnumbered_20000.txt [IP_SERVIDOR] >> .\Prac_1\Resultados\tiempos_1_nodo.txt
 ```
-2. Benchmark Arquitectura Directa (Balanceado)
+2. Benchmark Arquitectura Indirecta (RabbitMQ)
 ```Bash
-python client_benchmark_balanced.py benchmark_unnumbered.txt [IP_SERVIDOR]
+python .\Prac_1\src\client_indirect_benchmark.py .\Prac_1\Benchmarks\benchmark_numbered_60000.txt [IP_SERVIDOR] >> .\Prac_1\Resultados\tiempos_1_nodo.txt
 ```
-3. Benchmark Arquitectura Indirecta (RabbitMQ)
+3. Generación Automática de Gráficas
 ```Bash
-python client_benchmark_indirect.py benchmark_unnumbered.txt [IP_SERVIDOR]
+python .\Prac_1\src\analizar_resultados.py .\Prac_1\Resultados\
 ```
 Análisis de Resultados Esperados
-Escalabilidad Pyro4: El throughput debería mejorar ligeramente al añadir nodos, pero se verá limitado por el coste de gestión de proxies en el cliente y la latencia de red.
+Escalabilidad Pyro4: El rendimiento total (throughput) se mantendrá prácticamente plano e invariable (en torno a las ~150 ops/sec) sin importar cuántos nodos añadas. Esto demuestra que en arquitecturas síncronas el cliente bloqueante y la latencia RTT de la red actúan como cuello de botella.
 
-Escalabilidad RabbitMQ: Al añadir más workers en la Máquina A, el tiempo total de procesamiento en el benchmark indirecto debería reducirse de forma casi lineal.
+Escalabilidad RabbitMQ: l añadir más workers distribuidos, la capacidad de procesamiento del sistema aumenta de forma drástica (alcanzando picos de +2600 ops/sec). El cliente se libera de inmediato mediante un esquema fire-and-forget y delega la concurrencia a la cola distribuidora.
 
-Consistencia: En ambos modelos, el reporte final debe indicar 0 errores de duplicidad de asientos gracias a la atomicidad de Redis.
+Consistencia: En el test de asientos numerados (60k), notarás una ligera penalización de rendimiento al llegar a los 8 workers distribuidos en comparación con los 6 workers. Esto modela visualmente el impacto de la contención sobre la base de datos (Redis), donde la persistencia y la gestión de bloqueos simultáneos de recursos compartidos definen el límite de escalabilidad horizontal del sistema.
