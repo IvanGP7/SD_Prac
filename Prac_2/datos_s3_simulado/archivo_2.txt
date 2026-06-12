@@ -1,0 +1,8 @@
+Ese script está mal optimizado y el resultado es una imbecil solución distribuidora.
+Vaya diseño de software más malo, el que lo programó es un auténtico idiota.
+Deja de enviar peticiones basura a la cola, eres un bobo.
+La computación en la nube ofrece una elasticidad sin precedentes para cargas de trabajo variables.
+Es crucial monitorizar el rendimiento de las colas de mensajería para evitar cuellos de botella.
+El almacenamiento de objetos como AWS S3 es altamente escalable y duradero.
+Deja de enviar peticiones basura a la cola, eres un bobo.
+No entiendo cómo puedes ser tan tonto de caerte en la misma excepción de código.

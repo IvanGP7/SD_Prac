@@ -1,0 +1,6 @@
+Es crucial monitorizar el rendimiento de las colas de mensajería para evitar cuellos de botella.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.
+La computación en la nube ofrece una elasticidad sin precedentes para cargas de trabajo variables.
+Es crucial monitorizar el rendimiento de las colas de mensajería para evitar cuellos de botella.
+El desarrollo de sistemas distribuidos requiere un diseño cuidadoso de la tolerancia a fallos.
+Una base de datos en memoria proporciona accesos de lectura y escritura con latencias mínimas.

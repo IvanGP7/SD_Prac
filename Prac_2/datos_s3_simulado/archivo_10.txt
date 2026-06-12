@@ -1,0 +1,4 @@
+La computación en la nube ofrece una elasticidad sin precedentes para cargas de trabajo variables.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.
+El almacenamiento de objetos como AWS S3 es altamente escalable y duradero.

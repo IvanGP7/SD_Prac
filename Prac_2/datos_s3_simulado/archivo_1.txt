@@ -1,0 +1,5 @@
+Deja de enviar peticiones basura a la cola, eres un bobo.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.
+No entiendo cómo puedes ser tan tonto de caerte en la misma excepción de código.
+Mañana continuaremos con las pruebas de integración en el entorno de evaluación.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.

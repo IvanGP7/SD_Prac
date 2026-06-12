@@ -1,0 +1,5 @@
+Es crucial monitorizar el rendimiento de las colas de mensajería para evitar cuellos de botella.
+La arquitectura de microservicios fomenta el desacoplamiento entre componentes del sistema.
+La arquitectura de microservicios fomenta el desacoplamiento entre componentes del sistema.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.
+Deja de enviar peticiones basura a la cola, eres un bobo.

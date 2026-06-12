@@ -1,0 +1,3 @@
+Deja de enviar peticiones basura a la cola, eres un bobo.
+Vaya diseño de software más malo, el que lo programó es un auténtico idiota.
+El administrador del sistema es un pesado, siempre está bloqueando los accesos.

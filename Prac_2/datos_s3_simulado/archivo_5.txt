@@ -1,0 +1,5 @@
+Una base de datos en memoria proporciona accesos de lectura y escritura con latencias mínimas.
+Mañana continuaremos con las pruebas de integración en el entorno de evaluación.
+Es crucial monitorizar el rendimiento de las colas de mensajería para evitar cuellos de botella.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.
+Lithops permite abstraer la infraestructura de ejecución ejecutando código en hilos o Lambdas.
