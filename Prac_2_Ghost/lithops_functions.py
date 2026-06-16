@@ -32,7 +32,7 @@ def map_filter_insults_batch(lista_archivos, storage):
     bucket_name = "datos-practica2-sd-ivan-pere"
     insultos_totales_chunk = 0
 
-    print(f"📦 [MAP BATCH] Esta Lambda va a procesar {len(lista_archivos)} archivos de golpe: {lista_archivos}")
+    print(f" [MAP BATCH] Esta Lambda va a procesar {len(lista_archivos)} archivos de golpe: {lista_archivos}")
 
     for nombre_archivo in lista_archivos:
         # Lectura
@@ -51,14 +51,14 @@ def map_filter_insults_batch(lista_archivos, storage):
 # 3. FASE REDUCE (Intacta)
 # =====================================================================
 def reduce_total_insults(resultados_mapas):
-    print("\n🔄 [REDUCE] Agregando resultados de las Lambdas...")
+    print("\n [REDUCE] Agregando resultados de las Lambdas...")
     return sum(resultados_mapas)
 
 # =====================================================================
 # 4. LA OPERACIÓN BATCH DEL EJERCICIO 4
 # =====================================================================
 def operacion_batch(funcion_map, maxfunc, bucket_name, fexec):
-    print(f"🔍 Escaneando archivos dentro del bucket '{bucket_name}'...")
+    print(f" Escaneando archivos dentro del bucket '{bucket_name}'...")
     lista_objetos = fexec.storage.list_objects(bucket=bucket_name)
 
     nombres_archivos = []
@@ -74,7 +74,7 @@ def operacion_batch(funcion_map, maxfunc, bucket_name, fexec):
     for i, archivo in enumerate(nombres_archivos):
         chunks[i % n_chunks].append(archivo)
 
-    print(f"⚡ Disparando Operación Batch: {len(nombres_archivos)} archivos repartidos en solo {n_chunks} Lambdas concurrentes.")
+    print(f" Disparando Operación Batch: {len(nombres_archivos)} archivos repartidos en solo {n_chunks} Lambdas concurrentes.")
     
     # Lithops ahora pasará cada sub-lista (chunk) a una Lambda distinta
     fexec.map_reduce(funcion_map, chunks, reduce_total_insults)
@@ -107,6 +107,6 @@ if __name__ == "__main__":
     total_insultos = operacion_batch(map_filter_insults_batch, MAX_FUNCIONES, BUCKET_NAME, fexec)
 
     print("\n=====================================================================")
-    print("🏆 [REPORTE BATCH FINALIZADO - EJERCICIO 4]")
-    print(f"📊 Total de insultos censurados: {total_insultos}")
+    print(" [REPORTE BATCH FINALIZADO - EJERCICIO 4]")
+    print(f" Total de insultos censurados: {total_insultos}")
     print("=====================================================================")

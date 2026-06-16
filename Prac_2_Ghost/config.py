@@ -1,4 +1,4 @@
-# Modifica este valor con la IP Pública actual de tu instancia EC2 de AWS
+# Valor con la IP Pública actual de la instancia EC2 de AWS
 AWS_EC2_IP = "13.216.244.177"
 
 # Puertos estándar expuestos en los Security Groups
